@@ -51,7 +51,6 @@ def show_melon(melon_id):
     """
 
     melon = melons.get_by_id(melon_id)
-    print melon
     return render_template("melon_details.html",
                            display_melon=melon)
 
@@ -60,19 +59,31 @@ def show_melon(melon_id):
 def shopping_cart():
     """Display content of shopping cart."""
 
+    melon_count = {}
     all_melons = []
+    total_by_type = {}
+    order_total = 0
+
     if 'cart' in session:
         for item in session['cart']:
             all_melons.append(melons.get_by_id(item))
-        print all_melons
+    set_melons = set(all_melons)
+
+    print "Set: ", set_melons 
+
+    for item in set_melons:
+        qty = all_melons.count(item)
+        melon_count[item] = qty
+
+    for item in melon_count:
+        total_per_melon = melon_count[item]*item.price
+        total_by_type[item.common_name] = total_per_melon
+        order_total += total_per_melon
+
+    print "Order total ", order_total
 
 
-    # if 'cart' in session:
-    #     for item in session['cart']:
-    #         print "for loop works!"
-    #         melon = melons.get_by_id(item)
-    #         # melons.get_by_id(item)
-    #         print type(melon)
+
     # # TODO: Display the contents of the shopping cart.
 
     # The logic here will be something like:
